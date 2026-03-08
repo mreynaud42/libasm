@@ -2,6 +2,7 @@
 # -------------------------------     HEAD     ------------------------------- #
 # -------------------------------   preamble   ------------------------------- #
 NAME		= libasm
+NAME_LIB	= $(addsuffix .a, $(NAME))
 DIR_BUILD	= .build/
 
 ASM			= nasm -f elf64
@@ -9,6 +10,7 @@ RM			= rm -rf
 AR			= ar -crs
 MKDIR		= mkdir -p $(shell dirname $@)
 ECHO		= echo
+GCC			= gcc
 
 # -------------------------------    source    ------------------------------- #
 include src.mk
@@ -33,12 +35,15 @@ OBJ		= $(addprefix $(DIR_BUILD), $(addsuffix .o, $(SRCS)))
 all		: $(NAME)
 
 # -------------------------------     ASM     ------------------------------- #
-$(NAME)	: $(OBJ)
+$(NAME)	: $(NAME_LIB)
+
+$(NAME_LIB) : $(OBJ)
 	@$(MSG_OBJECTS)
-	$(AR) $(addsuffix .a, $@) $(OBJ)
+	$(AR) $(NAME_LIB) $(OBJ)
 	@$(MSG_RULE)
 
-# # -------------------------------    object    ------------------------------- #
+
+# -------------------------------    object    ------------------------------- #
 $(DIR_BUILD)%.o : $(DIR_SRC)%.s
 	@$(MKDIR)
 	$(ASM) $< -o $@
@@ -47,15 +52,22 @@ $(DIR_BUILD)%.o : $(DIR_SRC)%.s
 .PHONY	: clean
 clean	:
 	@$(RM) $(DIR_BUILD)
+	@$(RM) $(basename $(TEST_MAIN))
 	@$(MSG_RULE)
 
 # -------------------------------    fclean    ------------------------------- #
 .PHONY	: fclean
 fclean	: clean
-	@$(RM) $(NAME)
+	@$(RM) $(NAME_LIB)
 	@$(MSG_RULE)
 
 # -------------------------------      re      ------------------------------- #
 .PHONY	: re
 re		: fclean all
+	@$(MSG_RULE)
+
+# -------------------------------     test     ------------------------------- #
+.PHONY	: test
+test	: $(NAME)
+	$(GCC) -g $(TEST_MAIN) $(NAME_LIB) -o $(basename $(TEST_MAIN))
 	@$(MSG_RULE)
