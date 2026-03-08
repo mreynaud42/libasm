@@ -1,38 +1,21 @@
 
-default rel
+; size_t ft_strlen(const char *s);
+; rax ft_strlen rdi ; rax = size_t = 64 bits
 
-section .data
-   hello: db "Hello world!\n", 0
-	helloLen: equ $-hello
-
-section .bss
+; rdi rsi rdx rcx r8 r9
 
 section .text
-   global main
-main:
-   lea rdi, hello
-   call ft_strlen
-   xor rax, rax
-   ret
-
    global ft_strlen   
+
 ft_strlen:
-   ; size_t strlen(const char *s);
-   ; rdi rsi rdx rcx r8 r9
-   mov rcx, 0
+   mov rax, rdi
 
    _loop:
-      cmp byte [rdi+rcx], 0
+      cmp byte [rax], 0
       je return
-      cmp rcx, 20
-      je return_error
-      inc rcx
+      inc rax
       jmp _loop
    
-   return_error:
-      mov rax, -1
-      ret
-
    return:
-      mov rax, rcx
+      sub rax, rdi
       ret
