@@ -5,17 +5,17 @@
 ; rdi rsi rdx rcx r8 r9
 
 section .text
-   global ft_strlen   
+    global ft_strlen   
 
 ft_strlen:
-   mov rax, rdi
+    mov rax, rdi
 
-   _loop:
-      cmp byte [rax], 0
-      je return
-      inc rax
-      jmp _loop
-   
-   return:
-      sub rax, rdi
-      ret
+    _loop:
+        cmp byte [rax], 0
+        je return
+        inc rax
+        jmp _loop
+
+    return:
+        sub rax, rdi
+        ret
