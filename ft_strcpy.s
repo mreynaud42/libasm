@@ -5,18 +5,18 @@
 ; rdi rsi rdx rcx r8 r9
 
 section .text
-    global ft_strcpy   
+    global ft_strcpy
 
 ft_strcpy:
     mov rax, rdi
-    cld ; Clear Direction Flag
+    cld                     ; Clear Direction Flag
 
-    _loop:
-        cmp byte [rsi], 0
-        je return
-        movsb   ; Move Data From String to String (and inc)
-        jmp _loop
+    .loop_:
+        cmp BYTE [rsi], 0
+        je .end_string
+        movsb               ; Move Data From String to String (and inc)
+        jmp .loop_
    
-    return:
-        mov byte [rdi], 0
+    .end_string:
+        mov BYTE [rdi], 0
         ret

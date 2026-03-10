@@ -8,7 +8,7 @@ section .text
     global ft_strcmp
 
 ft_strcmp:
-    .loop:
+    .loop_:
         mov al, [rdi]
         mov dl, [rsi]
 
@@ -20,7 +20,7 @@ ft_strcmp:
 
         inc rsi
         inc rdi
-        jmp .loop
+        jmp .loop_
    
     .diff:
         movzx rax, al   ; Move With Zero-Extend
