@@ -238,18 +238,23 @@ void test_str_read(int fd, void *buf, size_t count)
 {
     ssize_t nb_read = read(fd, buf, count);
     int read_errno = errno;
-    ((char *)buf)[nb_read] = '\0';
-
+    if (nb_read && !read_errno)
+        ((char *)buf)[nb_read] = '\0';
+    errno = 0;
+    
     ssize_t nb_ft_read = ft_read(fd, buf, count);
     int ft_read_errno = errno;
-    ((char *)buf)[nb_ft_read] = '\0';
+    if (nb_ft_read && !ft_read_errno)
+        ((char *)buf)[nb_ft_read] = '\0';
+    errno = 0;
 
     if (nb_read != nb_ft_read || read_errno != ft_read_errno) {
         nb_error++;
         printf("\033[31m");
     }
     printf("read(%d, %p, %ld)\n", fd, (const void *)buf, count);
-    printf("\"%s\"\n", (const char *)buf);
+    if (nb_ft_read && !ft_read_errno)
+        printf("\"%s\"\n", (const char *)buf);
     printf("nb_read: %ld == %ld\n", nb_read, nb_ft_read);
     printf("errno: %d == %d\n", read_errno, ft_read_errno);
     perror("errno");
@@ -270,14 +275,14 @@ void test_read()
         close(fd);
     } {
         int fd = open("./Makefile", O_RDONLY);
-        char *buf = malloc(100 * sizeof(char));
+        char *buf = malloc(101 * sizeof(char));
 
         test_str_read(fd, (void *)buf, 100);
 
         free(buf);
         close(fd);
     } {
-        char *buf = malloc(100 * sizeof(char));
+        char *buf = malloc(101 * sizeof(char));
         
         test_str_read(-1, (void *)buf, 100);
         
@@ -295,6 +300,44 @@ void test_read()
     }
 }
 
+char *ft_strdup(const char *s);
+
+void test_str_strdup(const char *s)
+{
+    char *sdup = ft_strdup(s);
+
+    if (strcmp(s, sdup) != 0) {
+        nb_error++;
+        printf("\033[31m");
+    }
+    printf("strdup(%s)\n", s);
+    printf("\"%s\"\n", sdup);
+    printf("errno: %d\n", errno);
+    if (errno)
+        errno = 0;
+    printf("\n\033[0m");
+
+    free(sdup);
+}
+
+void test_strdup()
+{
+    printf("#################### ft_strdup ####################\n");
+    {
+        char str[100] = "Hello World!\0";
+        test_str_strdup(str);
+    } {
+        test_str_strdup("");
+    } {
+        errno = ENOMEM;
+        char str[100] = "Hello World!\0";
+        test_str_strdup(str);
+        errno = 0;
+    } {
+        // test_str_strdup((const char *)0); // segfault
+    }
+}
+
 int main()
 {
     test_strlen();
@@ -304,6 +347,7 @@ int main()
     test_write();
     test_read();
     setvbuf(stdout, NULL, _IOFBF, BUFSIZ);
+    test_strdup();
     
     if (nb_error != 0) {
         printf("\033[31m ##### ##### ##### ##### ##### \n");
