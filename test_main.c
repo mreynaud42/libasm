@@ -238,11 +238,11 @@ void test_str_read(int fd, void *buf, size_t count)
 {
     ssize_t nb_read = read(fd, buf, count);
     int read_errno = errno;
-    ((char *)buf)[nb_read + 1] = '\0';
+    ((char *)buf)[nb_read] = '\0';
 
     ssize_t nb_ft_read = ft_read(fd, buf, count);
     int ft_read_errno = errno;
-    ((char *)buf)[nb_ft_read + 1] = '\0';
+    ((char *)buf)[nb_ft_read] = '\0';
 
     if (nb_read != nb_ft_read || read_errno != ft_read_errno) {
         nb_error++;
@@ -270,14 +270,14 @@ void test_read()
         close(fd);
     } {
         int fd = open("./Makefile", O_RDONLY);
-        char *buf = malloc(101 * sizeof(char));
+        char *buf = malloc(100 * sizeof(char));
 
         test_str_read(fd, (void *)buf, 100);
 
         free(buf);
         close(fd);
     } {
-        char *buf = malloc(101 * sizeof(char));
+        char *buf = malloc(100 * sizeof(char));
         
         test_str_read(-1, (void *)buf, 100);
         
