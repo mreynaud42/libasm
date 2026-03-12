@@ -4,7 +4,6 @@
 
 ; rdi rsi rdx rcx r8 r9
 
-extern __errno_location
 extern malloc
 extern ft_strlen
 extern ft_strcpy
