@@ -5,15 +5,33 @@ NAME		= libasm
 NAME_LIB	= $(addsuffix .a, $(NAME))
 DIR_BUILD	= .build/
 
-ASM			= nasm -f elf64
-RM			= rm -rf
-AR			= ar -crs
+
+ASM_GDBF	= -g -F dwarf
+ASM_F		= -f elf64 
+ASM			= nasm $(ASM_F) $(ASM_GDBF)
+
+RM_GDBF		= -rf
+RM			= rm $(RM_GDBF)
+
+AR_GDBF		= -crs
+AR			= ar $(AR_GDBF)
+
 MKDIR		= mkdir -p $(shell dirname $@)
 ECHO		= echo
-GCC			= gcc
+
+GCC_GDBF	= -g3
+GCC			= gcc $(GCC_GDBF)
 
 # -------------------------------    source    ------------------------------- #
 include src.mk
+
+SRCS	= $(MANDATORY_SRCS)
+
+# -------------------------------    bonus    ------------------------------- #
+
+ifdef BONUS
+	SRCS += $(BONUS_SRCS)
+endif
 
 # -------------------------------    colors    ------------------------------- #
 COLOR_GREEN	= \033[0;32m
@@ -66,8 +84,14 @@ fclean	: clean
 re		: fclean all
 	@$(MSG_RULE)
 
+# -------------------------------    bonus    ------------------------------- #
+.PHONY	: bonus
+bonus	:
+	@$(MAKE) --no-print-directory BONUS=1
+	@$(MSG_RULE)
+
 # -------------------------------     test     ------------------------------- #
 .PHONY	: test
 test	: $(NAME)
-	$(GCC) -g $(TEST_MAIN) $(NAME_LIB) -o $(basename $(TEST_MAIN))
+	$(GCC) $(TEST_MAIN) $(NAME_LIB) -o $(basename $(TEST_MAIN))
 	@$(MSG_RULE)
