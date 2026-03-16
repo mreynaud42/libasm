@@ -329,10 +329,7 @@ void test_strdup()
     } {
         test_str_strdup("");
     } {
-        errno = ENOMEM;
-        char str[100] = "Hello World!\0";
-        test_str_strdup(str);
-        errno = 0;
+        // Uncomment main at bottom file; test if malloc crash
     } {
         // test_str_strdup((const char *)0); // segfault
     }
@@ -357,3 +354,45 @@ int main()
 
     return 0;
 }
+
+
+
+// // TEST FOR STRDUP ERROR HANDLER
+
+// #include <stdio.h>
+// #include <string.h>
+// #include <errno.h>
+// #include <stdlib.h>
+// #include <sys/resource.h>
+
+// char	*ft_strdup(const char *s);
+
+// int	main()
+// {
+// 	struct rlimit	rl;
+// 	rl.rlim_cur = 100000; 
+// 	rl.rlim_max = 100000;
+
+// 	setrlimit(RLIMIT_AS, &rl);
+
+// 	char	*str = "Hello";
+
+// 	errno = 0;
+// 	char	*real_ret = strdup(str);
+// 	if (real_ret)
+// 		free(real_ret);
+
+// 	int		real_err = errno;
+
+// 	errno = 0;
+// 	char	*ret = ft_strdup(str);
+
+// 	if (ret == NULL)
+// 		printf("Succès du test : ft_strdup a renvoyé NULL et errno = %d || %d\n", errno, real_err);
+// 	else
+// 	{
+// 		printf("Échec du test : ft_strdup a réussi (il y a trop de RAM) ou a crashé.\n");
+// 		free(ret);
+// 	}
+// 	return 0;
+// }
