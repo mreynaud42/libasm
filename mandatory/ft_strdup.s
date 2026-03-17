@@ -17,7 +17,7 @@ ft_strdup:
     inc rax         ; add 1 for \0
     mov r11, rdi    ; save rdi in r11
     mov rdi, rax
-    call malloc wrt ..got.plt
+    call malloc wrt ..plt
     test rax, rax   ; set flags
     jnz .ok
 
