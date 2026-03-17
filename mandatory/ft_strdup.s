@@ -15,7 +15,7 @@ ft_strdup:
     call ft_strlen
 
     inc rax         ; add 1 for \0
-    mov r12, rdi    ; save rdi in r12
+    mov r11, rdi    ; save rdi in r11
     mov rdi, rax
     call malloc wrt ..plt
     test rax, rax   ; set flags
