@@ -11,4 +11,5 @@ BONUS_SRCS	= $(addprefix $(DIR_BONUS), $(BONUS_SRC))
 
 SRCS	= $(MANDATORY_SRCS) $(BONUS_SRCS)
 
-TEST_MAIN	= test_main.c
+TEST_MAIN		= main_bonus.c
+TEST_MAIN_BONUS	= test_main_bonus.c

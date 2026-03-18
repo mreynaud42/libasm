@@ -95,3 +95,9 @@ bonus	:
 test	: $(NAME)
 	$(GCC) $(TEST_MAIN) $(NAME_LIB) -o $(basename $(TEST_MAIN))
 	@$(MSG_RULE)
+
+# -------------------------------     test     ------------------------------- #
+.PHONY		: testbonus
+testbonus	: $(NAME)
+	$(GCC) $(TEST_MAIN_BONUS) $(NAME_LIB) -o $(basename $(TEST_MAIN_BONUS))
+	@$(MSG_RULE)
