@@ -10,7 +10,8 @@ typedef struct s_list
     struct s_list *next;
 } t_list;
 
-void ft_list_push_front(t_list **begin_list, void *data);
+void    ft_list_push_front(t_list **begin_list, void *data);
+int ft_list_size(t_list *begin_list);
 
 void test_push_front()
 {
@@ -35,6 +36,10 @@ void test_push_front()
         printf("data = [%p]\n", begin_list->data);
         printf("next = [%p]\n", begin_list->next);
         
+        int size = ft_list_size(begin_list);
+
+        printf("size = [%d]\n", size);
+
         free(begin_list->next);
         free(begin_list);
     }
