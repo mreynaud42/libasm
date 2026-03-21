@@ -10,18 +10,22 @@ section .text
     global ft_list_sort
 
 ; use Bubble Sort
-; begin_list must not be null
-; cmp must not be null
 ft_list_sort:
     ; rdi = t_list **begin_list
     ; rsi = int (*cmp)()
+
+    test rdi, rdi   ; if begin_list is null
+    je .return
+
+    test rsi, rsi   ; if cmp is null
+    je .return
 
     push r12
     push r13
     push r14
     push r15
+    push rbx
 
-    sub rsp, node_size  ; prepare rsp for dummy node
 
     mov r13, rdi    ; save **begin_list in r13
     mov r14, [rdi]  ; r14 = head
@@ -30,7 +34,9 @@ ft_list_sort:
     je .end
 
     ; create dummy node
-    mov qword [rsp + node.next], r14
+    sub rsp, node_size          ; prepare rsp for dummy node
+
+    mov [rsp + node.next], r14  ; dummy.next = head = r14
     mov r14, rsp                ; r14 = dummy node = prev
 
     mov r15, r14                ; save dummy node in r15
@@ -39,26 +45,21 @@ ft_list_sort:
 
     mov r12, rsi                ; save int (*cmp)() in r12
 
-    mov rcx, 0        ; rcx = null = last node list
+    mov rbx, 0                  ; rbx = null = last node list
 
     ._loop1:
         ._loop2:
 
             mov r9, [r8 + node.next]    ; r9 = b = a.next
         
-            cmp r9, rcx ; if last node list not sort
+            cmp r9, rbx     ; if last node list not sort
             je .endloop2
-
-            push rcx    ; save rcx in stack
     
             ; int cmp(a.data, b.data)
             ; call cmp function
             mov rdi, [r8 + node.data]   ; rdi = a.data
             mov rsi, [r9 + node.data]   ; rsi = b.data
             call r12                    ; call cmp
-
-            pop rcx     ; restore rcx stack
-
 
             test rax, rax   ; if a.data > b.data
             jg .swap
@@ -86,7 +87,7 @@ ft_list_sort:
         cmp r8, [r15 + node.next]  ; if list sort
         je .end
 
-        mov rcx, r8                 ; last node list
+        mov rbx, r8                 ; last node list
         mov r14, r15                ; r14 = dummy node = prev
         mov r8, [r14 + node.next]   ; r8 = a
 
@@ -99,9 +100,11 @@ ft_list_sort:
 
         add rsp, node_size
 
+        pop rbx
         pop r15
         pop r14
         pop r13
         pop r12
 
+    .return:
         ret
