@@ -20,18 +20,19 @@ ft_list_sort:
     test rsi, rsi   ; if cmp is null
     je .return
 
+    mov rax, [rdi]  ; rax = head
+
+    test rax, rax   ; if head is null
+    je .return
+
     push r12
     push r13
     push r14
     push r15
     push rbx
 
-
     mov r13, rdi    ; save **begin_list in r13
-    mov r14, [rdi]  ; r14 = head
-
-    test r14, r14   ; if head is null
-    je .end
+    mov r14, rax  ; r14 = head
 
     ; create dummy node
     sub rsp, node_size          ; prepare rsp for dummy node
