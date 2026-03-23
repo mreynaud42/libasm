@@ -13,8 +13,9 @@ typedef struct s_list
 
 int ft_strcmp(const char *s1, const char *s2);
 
+void    ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void *));
 void    ft_list_push_front(t_list **begin_list, void *data);
-int ft_list_size(t_list *begin_list);
+int     ft_list_size(t_list *begin_list);
 void    ft_list_sort(t_list **begin_list, int (*cmp)());
 
 void	ft_lstiter(t_list *lst)
@@ -29,6 +30,23 @@ void	ft_lstiter(t_list *lst)
 	}
     printf("size = [%d]\n", ft_list_size(save_lst));
     printf("\n");
+}
+
+void free_lst(t_list *lst)
+{
+    t_list *lst_to_free;
+    while (lst)
+    {
+        lst_to_free = lst;
+        lst = lst->next;
+        free(lst_to_free);
+    }
+    
+}
+
+void    ft_free(void *a)
+{
+    (void)a;
 }
 
 void test_push_front()
@@ -71,9 +89,12 @@ void test_push_front()
         ft_list_sort(&begin_list, &ft_strcmp);
 
         ft_lstiter(begin_list);
+        
+        ft_list_remove_if(&begin_list, data5, &ft_strcmp, &ft_free);
+        
+        ft_lstiter(begin_list);
 
-        free(begin_list->next);
-        free(begin_list);
+        free_lst(begin_list);
     }
 }
 
