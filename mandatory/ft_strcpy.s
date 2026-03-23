@@ -1,4 +1,5 @@
 
+; Prototype:
 ; char *ft_strcpy(char *dest, const char *src);
 ; rax ft_strcpy rdi rsi
 
@@ -8,6 +9,9 @@ section .text
     global ft_strcpy
 
 ft_strcpy:
+    ; rdi = char *dest
+    ; rsi = const char *src
+
     mov rax, rdi
     cld                     ; Clear Direction Flag
 

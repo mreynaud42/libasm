@@ -1,4 +1,5 @@
 
+; Prototype:
 ; size_t ft_strlen(const char *s);
 ; rax ft_strlen rdi ; rax = size_t = 64 bits
 
@@ -8,6 +9,8 @@ section .text
     global ft_strlen
 
 ft_strlen:
+    ; rdi = const char *s
+
     mov rax, rdi
 
     .loop_:

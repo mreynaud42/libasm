@@ -1,4 +1,5 @@
 
+; Prototype:
 ; int ft_strcmp(const char *s1, const char *s2);
 ; rax ft_strcmp rdi rsi
 
@@ -8,6 +9,9 @@ section .text
     global ft_strcmp
 
 ft_strcmp:
+    ; rdi = const char *s1
+    ; rsi = const char *s2
+
     .loop_:
         mov al, [rdi]
         mov dl, [rsi]

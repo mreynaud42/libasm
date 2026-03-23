@@ -1,4 +1,5 @@
 
+; Prototype:
 ; ssize_t ft_read(int fd, void *buf, size_t count);
 ; rax ft_read rdi rsi rdx
 
@@ -12,6 +13,10 @@ section .text
     global ft_read
 
 ft_read:
+    ; rdi = int fd
+    ; rsi = void *buf
+    ; rdx = size_t count
+
     mov rax, SYS_READ
     syscall
 

@@ -1,4 +1,5 @@
 
+; Prototype:
 ; char *ft_strdup(const char *s);
 ; rax ft_strdup rdi
 
@@ -12,6 +13,8 @@ section .text
     global ft_strdup
 
 ft_strdup:
+    ; rdi = const char *s
+
     push rdi    ; save rdi
     sub rsp, 8  ; align stack
 

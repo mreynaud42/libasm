@@ -1,4 +1,5 @@
 
+; Prototype:
 ; void ft_list_sort(t_list **begin_list, int (*cmp)());
 
 struc   node
@@ -10,6 +11,8 @@ section .text
     global ft_list_sort
 
 ; use Bubble Sort
+; The function pointed to by cmp will be used as:
+; (*cmp)(list_ptr->data, list_other_ptr->data);
 ft_list_sort:
     ; rdi = t_list **begin_list
     ; rsi = int (*cmp)()
@@ -32,7 +35,7 @@ ft_list_sort:
     push rbx
 
     mov r13, rdi    ; save **begin_list in r13
-    mov r14, rax  ; r14 = head
+    mov r14, rax    ; r14 = head
 
     ; create dummy node
     sub rsp, node_size          ; prepare rsp for dummy node
