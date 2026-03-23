@@ -11,6 +11,39 @@ By completing this project, you will deepen your understanding of:
 - Implementing data structures like linked lists in low-level code.
 - Debugging and optimizing assembly routines for efficiency.
 
+## Registers
+
+| Register | Low/High byte | 16-bit | 32-bit | 64-bit | Description |
+|----------|---------------|--------|--------|--------|-------------|
+| **Caller-saved registers** |
+| RAX      | AL / AH       | AX     | EAX    | RAX    | Accumulator, return value, temporary |
+| RDI      | DIL           | DI     | EDI    | RDI    | 1st argument, destination index for string ops |
+| RSI      | SIL           | SI     | ESI    | RSI    | 2nd argument, source index for string ops |
+| RDX      | DL / DH       | DX     | EDX    | RDX    | 3rd argument, data register, temporary |
+| RCX      | CL / CH       | CX     | ECX    | RCX    | 4th argument, counter, temporary |
+| R8       | R8B           | R8W    | R8D    | R8     | 5th argument, temporary |
+| R9       | R9B           | R9W    | R9D    | R9     | 6th argument, temporary |
+| R10      | R10B          | R10W   | R10D   | R10    | Temporary register, scratch |
+| R11      | R11B          | R11W   | R11D   | R11    | Temporary register, scratch |
+| **Callee-saved registers** |
+| RBX      | BL / BH       | BX     | EBX    | RBX    | Base register, preserved across calls |
+| RBP      | BPL           | BP     | EBP    | RBP    | Base pointer, stack frame pointer |
+| RSP      | SPL           | SP     | ESP    | RSP    | Stack pointer, points to top of stack |
+| R12      | R12B          | R12W   | R12D   | R12    | Preserved register, can hold pointers |
+| R13      | R13B          | R13W   | R13D   | R13    | Preserved register, can hold pointers |
+| R14      | R14B          | R14W   | R14D   | R14    | Preserved register, can hold pointers |
+| R15      | R15B          | R15W   | R15D   | R15    | Preserved register, can hold pointers |
+| **Special / System registers** |
+| RIP      | —             | —      | —      | RIP    | Instruction pointer, holds address of next instruction |
+| RFLAGS   | —             | —      | —      | RFLAGS | CPU status flags, condition codes |
+| CS       | —             | CS     | CS     | CS     | Code segment selector |
+| DS       | —             | DS     | DS     | DS     | Data segment selector |
+| ES       | —             | ES     | ES     | ES     | Extra segment selector |
+| FS       | —             | FS     | FS     | FS     | Thread-local storage / extra data |
+| GS       | —             | GS     | GS     | GS     | Thread-local storage / extra data |
+| SS       | —             | SS     | SS     | SS     | Stack segment selector |
+
+
 ## Function
 
 ### Mandatory
