@@ -12,22 +12,28 @@ section .text
     global ft_strdup
 
 ft_strdup:
+    push rdi    ; save rdi
+    sub rsp, 8  ; align stack
+
     call ft_strlen
 
     inc rax         ; add 1 for \0
-    mov r11, rdi    ; save rdi in r11
     mov rdi, rax
     call malloc wrt ..plt
+
+    add rsp, 8      ; restore align stack
+
     test rax, rax   ; set flags
     jnz .ok
 
     
     .error:         ; if errno=ENOMEM
+        pop rdi
         ret
 
     .ok:
         mov rdi, rax
-        mov rsi, r12
+        pop rsi
         call ft_strcpy
 
         ret
