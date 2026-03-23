@@ -10,15 +10,22 @@ endstruc
 section .text
     global ft_list_remove_if
 
+; -----------------------------------------------------------------------------
 ; The functions pointed to by cmp and free_fct will be used as:
 ; (*cmp)(list_ptr->data, data_ref);
 ; (*free_fct)(list_ptr->data);
+; 
+; Arguments:
+; rdi = t_list **begin_list
+; rsi = void *data_ref
+; rdx = int (*cmp)()
+; rcx = void (*free_fct)(void *)
+; -----------------------------------------------------------------------------
 ft_list_remove_if:
-    ; rdi = t_list **begin_list
-    ; rsi = void *data_ref
-    ; rdx = int (*cmp)()
-    ; rcx = void (*free_fct)(void *)
 
+    ; -------------------------------------------------------------------------
+    ; Initial argument checks
+    ; -------------------------------------------------------------------------
     test rdi, rdi   ; if begin_list is null
     je .return
 
@@ -36,68 +43,88 @@ ft_list_remove_if:
     test rax, rax   ; if head is null
     je .return
 
-    push rdi    ; save rdi
+    ; -------------------------------------------------------------------------
+    ; Save callee-saved registers and rdi
+    ; -------------------------------------------------------------------------
+    push rdi
     push r12
     push r13
     push r14
     push r15
 
     sub rsp, 8  ; align stack
-
-    ; create dummy node
-    sub rsp, node_size          ; prepare rsp for dummy node
-
+    
+    ; -------------------------------------------------------------------------
+    ; Create a "dummy" node
+    ; -------------------------------------------------------------------------
+    sub rsp, node_size          ; reserve space for dummy node
     mov [rsp + node.next], rax  ; dummy.next = head = rax
 
+    ; -------------------------------------------------------------------------
+    ; Store arguments in callee-saved registers
+    ; -------------------------------------------------------------------------
     mov r12, rdx    ; r12 is function cmp
     mov r13, rcx    ; r13 is function free_fct
     mov r14, rsi    ; r14 is data_ref
     mov r15, rsp    ; r15 = dummy node = prev
 
-    ._loop:
-        mov r8, [r15 + node.next]   ; r8 = a
-        
-        test r8, r8
-        jz .end
+    ; -------------------------------------------------------------------------
+    ; Main loop
+    ; -------------------------------------------------------------------------
+._loop:
+    mov r8, [r15 + node.next]   ; r8 = a
+    
+    test r8, r8
+    jz .end
 
-        mov rdi, [r8 + node.data]   ; rdi = a.data
-        mov rsi, r14                ; rsi = data_ref
-        call r12                    ; cmp
+    mov rdi, [r8 + node.data]   ; rdi = a.data
+    mov rsi, r14                ; rsi = data_ref
+    call r12                    ; cmp
 
-        test rax, rax
-        je .free
+    test rax, rax
+    je .free
 
-        mov r15, [r15 + node.next]  ; prev = prev->next
+    mov r15, [r15 + node.next]  ; prev = prev->next
 
-        jmp .endfree
-        .free:
-            mov r9, [r8 + node.next]    ; r9 = b
-            mov [r15 + node.next], r9   ; prev->next = b
+    jmp .endfree
 
-            mov rdi, [r8 + node.data]   ; rdi a.data
-            call r13                    ; free_fct
+    ; -------------------------------------------------------------------------
+    ; Delete the current node
+    ; -------------------------------------------------------------------------
+.free:
+    mov r9, [r8 + node.next]    ; r9 = b
+    mov [r15 + node.next], r9   ; prev->next = b
 
-            ; free a ?
+    mov rdi, [r8 + node.data]   ; rdi a.data
+    call r13                    ; free_fct
 
-        .endfree:
+    ; free a ?
+    ; Note: the node itself is not freed here
+.endfree:
+    jmp ._loop
+    ; -------------------------------------------------------------------------
+    ; Main loop
+    ; -------------------------------------------------------------------------
 
-        jmp ._loop
 
-    .end:
+.end:
 
-        mov rax, [rsp + node.next]  ; get head
+    mov rax, [rsp + node.next]  ; get new head
 
-        add rsp, node_size
+    add rsp, node_size  ; Delete a "dummy" node
 
-        add rsp, 8  ; restore stack
+    add rsp, 8  ; restore stack alignment
 
-        pop r15
-        pop r14
-        pop r13
-        pop r12
-        pop rdi
+    ; -------------------------------------------------------------------------
+    ; Restore saved registers
+    ; -------------------------------------------------------------------------
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop rdi
 
-        mov [rdi], rax              ; update head
+    mov [rdi], rax  ; *begin_list = new head
 
-    .return:
-        ret
+.return:
+    ret
