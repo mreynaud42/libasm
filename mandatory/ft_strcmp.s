@@ -13,21 +13,17 @@ ft_strcmp:
         mov dl, [rsi]
 
         cmp al, dl
-        jne .diff
+        jne .end
 
         test al, al     ; if end string
-        je .end_string  ; return 0
+        je .end  ; return 0
 
         inc rsi
         inc rdi
         jmp .loop_
    
-    .diff:
+    .end:
         movzx rax, al   ; Move With Zero-Extend
         movzx rdx, dl   ; Move With Zero-Extend
         sub rax, rdx
-        ret
-    
-    .end_string:
-        xor rax, rdx    ; set 0
         ret
