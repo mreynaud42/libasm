@@ -93,12 +93,16 @@ bonus	:
 
 # -------------------------------     test     ------------------------------- #
 .PHONY	: test
-test	: $(NAME)
-	$(GCC) $(TEST_MAIN) $(NAME_LIB) -o $(basename $(TEST_MAIN))
+test	: $(TEST_MAIN)
+
+$(TEST_MAIN)	: $(TEST_MAIN).c $(NAME_LIB)
+	$(GCC) $< $(NAME_LIB) -o $@
 	@$(MSG_RULE)
 
-# -------------------------------     test     ------------------------------- #
-.PHONY		: testbonus
-testbonus	: $(NAME)
-	$(GCC) $(TEST_MAIN_BONUS) $(NAME_LIB) -o $(basename $(TEST_MAIN_BONUS))
+# -------------------------------  testbonus  ------------------------------- #
+.PHONY		: test_bonus
+test_bonus	: $(TEST_MAIN_BONUS)
+
+$(TEST_MAIN_BONUS)	: $(TEST_MAIN_BONUS).c $(NAME_LIB)
+	$(GCC) $< $(NAME_LIB) -o $@
 	@$(MSG_RULE)
