@@ -2,6 +2,8 @@
 ; Prototype:
 ; void ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void *));
 
+extern free
+
 struc   node
     .data:  resq 1
     .next:  resq 1
@@ -86,7 +88,7 @@ ft_list_remove_if:
 
     mov r15, [r15 + node.next]  ; prev = prev->next
 
-    jmp .endfree
+    jmp ._loop
 
     ; -------------------------------------------------------------------------
     ; Delete the current node
@@ -98,14 +100,14 @@ ft_list_remove_if:
     mov rdi, [r8 + node.data]   ; rdi a.data
     call r13                    ; free_fct
 
-    ; free a ?
+    mov rdi, r8         ; rdi a
+    call free wrt ..plt ; free a
     ; Note: the node itself is not freed here
 .endfree:
     jmp ._loop
     ; -------------------------------------------------------------------------
-    ; Main loop
+    ; End main loop
     ; -------------------------------------------------------------------------
-
 
 .end:
 
