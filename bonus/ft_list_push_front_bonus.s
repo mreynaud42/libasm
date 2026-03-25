@@ -16,6 +16,12 @@ ft_list_push_front:
     ; rdi = t_list **begin_list
     ; rsi = void *data
 
+    test rdi, rdi   ; if **begin_list is null
+    je .return
+
+    test rsi, rsi   ; if *data is null
+    je .return
+
     .create_node:
         push rdi
         push rsi
@@ -45,4 +51,5 @@ ft_list_push_front:
 
         mov [rdi], rax
 
+    .return:
         ret
