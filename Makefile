@@ -71,6 +71,7 @@ $(DIR_BUILD)%.o : $(DIR_SRC)%.s
 clean	:
 	@$(RM) $(DIR_BUILD)
 	@$(RM) $(basename $(TEST_MAIN))
+	@$(RM) $(basename $(TEST_MAIN_BONUS))
 	@$(MSG_RULE)
 
 # -------------------------------    fclean    ------------------------------- #
