@@ -18,6 +18,8 @@ void    ft_list_push_front(t_list **begin_list, void *data);
 int     ft_list_size(t_list *begin_list);
 void    ft_list_sort(t_list **begin_list, int (*cmp)());
 
+int ft_atoi_base(char *str, char *base);
+
 void	ft_lstiter(t_list *lst)
 {
     t_list *save_lst = lst;
@@ -49,8 +51,9 @@ void    ft_free(void *a)
     (void)a;
 }
 
-void test_push_front()
+void test_struct()
 {
+    printf("#################### list ####################\n");
     {
         t_list *begin_list = NULL;
         void *data1 = "Hello\0";
@@ -98,9 +101,97 @@ void test_push_front()
     }
 }
 
+void test_call_atoi(char *str, char *base)
+{
+    int res;
+    res = ft_atoi_base(str, base);
+    printf("ft_atoi_base(\"%s\", \"%s\") -> [%d]\n", str, base, res);
+}
+
+void test_atoi()
+{
+    printf("#################### atoi ####################\n");
+    {
+        char *base = "0123456789";
+        test_call_atoi(" +42", base);
+        test_call_atoi("+42", base);
+        test_call_atoi(" 42", base);
+        test_call_atoi("42", base);
+        test_call_atoi(" -42", base);
+        test_call_atoi("-42", base);
+        printf("\n");
+    } {
+        char *base = "01";
+        test_call_atoi(" +1010", base);
+        test_call_atoi("+0101", base);
+        test_call_atoi(" 1000", base);
+        test_call_atoi("0001", base);
+        test_call_atoi(" 101", base);
+        test_call_atoi("1011", base);
+        printf("\n");
+    } {
+        char *base = "01234567";
+        test_call_atoi(" +42", base);
+        test_call_atoi("+42", base);
+        test_call_atoi(" 42", base);
+        test_call_atoi("42", base);
+        test_call_atoi(" -42", base);
+        test_call_atoi("-42", base);
+        printf("\n");
+    } {
+        char *base = "0123456789ABCDEF";
+        test_call_atoi(" +42", base);
+        test_call_atoi("+42", base);
+        test_call_atoi(" 42", base);
+        test_call_atoi("42", base);
+        test_call_atoi(" -42", base);
+        test_call_atoi("-42", base);
+        printf("\n");
+    } {
+        char *base = "0123456789";
+        test_call_atoi(" +0", base);
+        test_call_atoi(" -0", base);
+        test_call_atoi("\t\r\v\n\f +42", base);
+        test_call_atoi("++42", base);
+        test_call_atoi("--42", base);
+        test_call_atoi("-+42", base);
+        test_call_atoi("+-42", base);
+        test_call_atoi(" ", base);
+        test_call_atoi(" -", base);
+        test_call_atoi("+", base);
+        printf("\n");
+    } {
+        char *str = "42";
+        test_call_atoi(str, "base");
+        test_call_atoi(str, "");
+        test_call_atoi(str, NULL);
+        test_call_atoi(str, "0123+4");
+        test_call_atoi(str, "01234-");
+        test_call_atoi(str, " 01234");
+        test_call_atoi(str, "01234\n");
+        test_call_atoi(str, "012341");
+        printf("\n");
+    } {
+        test_call_atoi("00", "0");
+        test_call_atoi(NULL, "0123456789");
+        test_call_atoi(NULL, NULL);
+        test_call_atoi("base", "base");
+        test_call_atoi("0123456789", "9876543210");
+        test_call_atoi(")(&*$)", "!@#$^&*()_=");
+        test_call_atoi("7FFFFFFF", "0123456789ABCDEF");
+        test_call_atoi("+7FFFFFFF", "0123456789ABCDEF");
+        test_call_atoi("80000000", "0123456789ABCDEF");
+        test_call_atoi("-7FFFFFFF", "0123456789ABCDEF");
+        test_call_atoi("FFFFFFFF", "0123456789ABCDEF");
+        test_call_atoi("-FFFFFFFF", "0123456789ABCDEF");
+        printf("\n");
+    }
+    printf("\n");
+}
+
 int main()
 {
-    test_push_front();
-
+    test_atoi();
+    test_struct();
     return 0;
 }
